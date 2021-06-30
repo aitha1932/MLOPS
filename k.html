@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        Task 9 K8s WebUI
+    </title>
+    <style>
+        #mybody{
+            background-color:#ADD8E6; 
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+                }
+        #a{
+            text-align: center;
+        }
+        #b{
+            text-align: center;
+            font-size: x-large;
+        }
+        #c{
+            font-size: 18pt; height: 42px; width : 300px; 
+        }
+        .button{
+            display: flex;
+            justify-content: center;
+            align-items: center;  
+        }
+        #e{
+            text-align: center;
+        }
+
+
+
+    </style>
+
+    <script>
+        function lw(){
+            var x=document.getElementById("c").value
+            
+
+                        //create pods, deployments
+
+                        if (user_inp.search('create')!= -1)
+                        {
+
+                                name= prompt("Enter name");
+                                img= prompt("Enter image");
+
+                                if (user_inp.search('pod')!= -1)
+                                {
+                                        x='kubectl run '+ name + ' --image ' + img + ' --kubeconfig admin.conf';
+                                        //alert(x);
+                                }
+                                else
+                                {
+                                        x='kubectl create deployment '+ name + ' --image ' + img + ' --kubeconfig admin.conf';   
+                                        //alert(x);    
+                                }
+                        }
+                        //delete all, pods, deployments
+                        else if (user_inp.search('delete')!= -1)
+                        {
+                                if (user_inp.search('all')!= -1)
+                                {
+                                        if (user_inp.search('pods')!= -1)
+                                        {
+                                                x='kubectl delete --all pods --kubeconfig admin.conf';
+                                                //alert(x);
+                                        }
+                                        else if (user_inp.search('deployments')!= -1)
+                                        {
+                                                x='kubectl delete --all deployments --kubeconfig admin.conf';   
+                                                //alert(x);    
+                                        }
+                                        else
+                                        {
+                                                x='kubectl delete all --all --kubeconfig admin.conf';   
+                                                //alert(x); 
+                                        }
+                                }
+                                else if (user_inp.search('pod')!= -1)
+                                {
+                                        name= prompt("Enter name");
+                                        x='kubectl delete pod '+ name + ' --kubeconfig admin.conf';
+                                        //alert(x);
+                                }
+                                else if (user_inp.search('deployment')!= -1)
+                                {
+                                        name= prompt("Enter name");
+                                        x='kubectl delete deployment '+ name + ' --kubeconfig admin.conf';   
+                                        //alert(x);    
+                                }
+
+                        }
+                        //describe pods, deployments
+                        else if (user_inp.search('describe')!= -1)
+                        {
+                                if (user_inp.search('deployments')!= -1)
+                                {
+                                        x='kubectl describe deployments --kubeconfig admin.conf';   
+                                        //alert(x);
+                                }  
+                                else
+                                {
+                                        x='kubectl describe pods --kubeconfig admin.conf';   
+                                        //alert(x);
+                                }                              
+                        }
+                        //get pods, deployments
+                        else if (user_inp.search('view')!= -1)
+                        {
+                                if (user_inp.search('deployments')!= -1)
+                                {
+                                        x='kubectl get deployments --kubeconfig admin.conf';   
+                                        //alert(x);
+                                }  
+                                else
+                                {
+                                        x='kubectl get pods --kubeconfig admin.conf';   
+                                        //alert(x);
+                                }                              
+                        }
+                        //scale deployments
+                        else if (user_inp.search('scale')!= -1)
+                        {
+                                dep_name= prompt("Enter name");
+                                replicas= prompt("Enter number of replicas");
+                                x= 'kubectl scale deployment '+ dep_name + ' --replicas=' + replicas +' --kubeconfig admin.conf';  
+                                //alert(x);
+                        }
+            var xhr=new XMLHttpRequest();
+            xhr.open("GET","http://192.168.0.109/cgi-bin/k8sb.py?x="+x,true)
+            xhr.send()
+            xhr.onload=function()
+            {
+            var output=xhr.responseText;
+            document.getElementById("e").innerHTML=output;
+            }
+        }
+    </script>
+</head>
+<body id ="mybody">
+    <img id="img1" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx7paj6VHcy6QlxI2UJ0LkVat3H4bIsAct0w&usqp=CAU" class="center">
+    <h1 id="a"> Welcome to k8s Web UI</h1>
+    <div>
+        <form id="b">
+            <label > Enter your command</label>
+            <input type="text" id="c" >
+            
+        </form>
+
+    </div>
+    <div class="button">
+        <button type="button" id="d" onclick="lw();"> Boom!! </button>
+
+    </div>
+
+    <pre>
+        <div id ="e">Your command output</div>
+    </pre>
+</body>
+
+</html>
